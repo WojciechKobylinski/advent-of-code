@@ -1,5 +1,3 @@
-import sys
-
 def solve(times, records):
     MAX_TIME = max(times)
     speedingDistances = [0] * (MAX_TIME+1)
