@@ -29,5 +29,15 @@ def solve1(input):
         SUM += predict(nums)
     return SUM
 
-
 print(solve1(sys.argv[1]))
+
+def solve2(input):
+    lines = open(input).read().splitlines()
+    SUM = 0
+    for line in lines:
+        nums = list(map(int, line.split(" ")))
+        nums.reverse()
+        SUM += predict(nums)
+    return SUM
+
+print(solve2(sys.argv[1]))
