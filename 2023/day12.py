@@ -1,4 +1,5 @@
-import sys, itertools
+import sys
+from functools import lru_cache
 
 def possible(springs, nums):
     cnt = 0
@@ -57,18 +58,50 @@ def solve1(input):
 
 print(solve1(sys.argv[1]))
 
+def matchingNum(springs, num):
+    if len(springs) < num:
+        return False
+    if len(springs) == num:
+        return all(c in {'#', '?'} for c in springs[:num])
+    return all(c in {'#', '?'} for c in springs[:num]) and springs[num] in ('.', '?')
+
+@lru_cache
+def sumRecurrent(springs, nums):
+    if not nums:
+        return 1
+    if not springs:
+        return 0
+    allNums = nums.split(",")
+    firstNum = int(nums[0])
+    restNums = ",".join(allNums[1:])
+    if springs[0] == '.':
+        return sumRecurrent(springs[1:], nums)
+    if springs[0] == '?':
+        without = sumRecurrent(springs[1:], nums)
+        if matchingNum(springs, firstNum):
+            return without + sumRecurrent(springs[firstNum+1:], restNums)
+        else:
+            return without
+    if springs[0] == "#":
+        if matchingNum(springs, firstNum):
+            return sumRecurrent(springs[firstNum+1:], restNums)
+        else:
+            return 0
+    print("ERRRORRR")
+    return -1
+
+
+
 def solve2(input):
     lines = open(input).read().splitlines()
     SUM = 0
     for line in lines:
         springs, nums = line.split(" ")
         springs = springs+"?"+springs+"?"+springs+"?"+springs+"?"+springs
-        springs = list(springs)
-        nums = list(map(int, nums.split(",")))
-        nums = nums * 5
+        nums = nums+','+nums+','+nums+','+nums+','+nums
 
         # print(" LINE "+"".join(springs))
-        SUM += processLine(springs, nums)
+        SUM += sumRecurrent(springs, nums)
     return SUM
 
-# print(solve2(sys.argv[1]))
+print(solve2(sys.argv[1]))
