@@ -56,7 +56,7 @@ def solve1(input):
         SUM += processLine(springs, nums)
     return SUM
 
-print(solve1(sys.argv[1]))
+# print(solve1(sys.argv[1]))
 
 def matchingNum(springs, num):
     if len(springs) < num:
@@ -65,8 +65,11 @@ def matchingNum(springs, num):
         return all(c in {'#', '?'} for c in springs[:num])
     return all(c in {'#', '?'} for c in springs[:num]) and springs[num] in ('.', '?')
 
+# jest za dużo o te co przeszły tą samą drogą z pustymi ??
+# tak bo to na input1a.txt ma 8787 a powinno 7032. może parametry to caly string, obecny index, nums. i po zmianie ? zmieniac string
+
 @lru_cache
-def sumRecurrent(springs, nums):
+def sumRecurrent(springs, nums, questionMarkFill):
     if not nums:
         return 1
     if not springs:
@@ -74,17 +77,19 @@ def sumRecurrent(springs, nums):
     allNums = nums.split(",")
     firstNum = int(nums[0])
     restNums = ",".join(allNums[1:])
+    if len(springs) == nums and matchingNum(springs, firstNum):
+        return 1
     if springs[0] == '.':
-        return sumRecurrent(springs[1:], nums)
+        return sumRecurrent(springs[1:], nums, questionMarkFill)
     if springs[0] == '?':
-        without = sumRecurrent(springs[1:], nums)
+        without = sumRecurrent(springs[1:], nums, questionMarkFill+".")
         if matchingNum(springs, firstNum):
-            return without + sumRecurrent(springs[firstNum+1:], restNums)
+            return without + sumRecurrent(springs[firstNum+1:], restNums, questionMarkFill+"#")
         else:
             return without
     if springs[0] == "#":
         if matchingNum(springs, firstNum):
-            return sumRecurrent(springs[firstNum+1:], restNums)
+            return sumRecurrent(springs[firstNum+1:], restNums, questionMarkFill)
         else:
             return 0
     print("ERRRORRR")
@@ -97,11 +102,11 @@ def solve2(input):
     SUM = 0
     for line in lines:
         springs, nums = line.split(" ")
-        springs = springs+"?"+springs+"?"+springs+"?"+springs+"?"+springs
-        nums = nums+','+nums+','+nums+','+nums+','+nums
+        springs = springs #+"?"+springs+"?"+springs+"?"+springs+"?"+springs
+        nums = nums #+','+nums+','+nums+','+nums+','+nums
 
         # print(" LINE "+"".join(springs))
-        SUM += sumRecurrent(springs, nums)
+        SUM += sumRecurrent(springs, nums, "")
     return SUM
 
 print(solve2(sys.argv[1]))
