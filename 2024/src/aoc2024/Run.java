@@ -19,7 +19,7 @@ public class Run {
         String variant = args[1];
         String fileName = "input"+day+args[2]+".txt";
         try {
-            Class clazz = Class.forName("aoc2024.Day"+day);
+            Class<?> clazz = Class.forName("aoc2024.Day"+day);
             @SuppressWarnings("unchecked")
             Day daySolver = (Day) clazz.getDeclaredConstructor().newInstance();
             List<String> input = Files.readAllLines(Path.of(fileName));
