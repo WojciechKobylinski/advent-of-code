@@ -20,6 +20,21 @@ interface Day {
         return result;
     }
 
+    default int[][] toIntArray(List<String> input) {
+        char[][] chars = toCharArray(input);
+        int rows = chars.length;
+        int cols = chars[0].length;
+
+        int[][] result = new int[rows][cols];
+        for (int y=0; y<rows; y++) {
+            for (int x=0; x<cols; x++) {
+                result[x][y] = chars[x][y] - '0';
+            }
+        }
+        
+        return result;
+    }
+
     default int numRows(List<String> input) {
         return input.size();
     }
