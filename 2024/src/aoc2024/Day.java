@@ -1,6 +1,8 @@
 package aoc2024;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 interface Day {
     void solve1(List<String> input);
@@ -41,5 +43,13 @@ interface Day {
 
     default int numCols(List<String> input) {
         return input.size() > 0 ? input.get(0).length() : 0;
+    }
+
+    default void println(String s) {
+        System.out.println(s);
+    }
+
+    default <X> String printSet(Set<X> s) {
+        return Arrays.toString(s.toArray());
     }
 }
